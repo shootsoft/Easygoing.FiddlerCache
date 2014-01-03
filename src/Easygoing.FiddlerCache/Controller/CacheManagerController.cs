@@ -1,4 +1,5 @@
-﻿using Easygoing.FiddlerCache.Model;
+﻿using BrightIdeasSoftware;
+using Easygoing.FiddlerCache.Model;
 using Easygoing.FiddlerCache.Service;
 using Easygoing.FiddlerCache.View;
 using Fiddler;
@@ -96,9 +97,17 @@ namespace Easygoing.FiddlerCache.Controller
 
         public void AddCacheView(IEnumerable<CacheItem> items)
         {
-
+            
             foreach (var item in items)
             {
+                //if (!View.Groups.ContainsKey(item.Host))
+                //{
+                //    OLVGroup gp = new BrightIdeasSoftware.OLVGroup(item.Host);
+                //    View.TreeListViewCache.OLVGroups.Add(gp);
+                //    View.Groups.Add(item.Host, gp);
+                    
+                //}
+
                 View.TreeListViewCache.AddObject(item);
             }
 

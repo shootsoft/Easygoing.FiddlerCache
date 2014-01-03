@@ -16,6 +16,7 @@ namespace Easygoing.FiddlerCache.Model
         public string Local { get;  set; }
         public DateTime Creation { get; set; }
         public long Length { get; set; }
+        public string Host { get; set; }
         public Dictionary<string, string> ResponseHeaders { get;  set; }
 
         public CacheItem()
@@ -29,25 +30,33 @@ namespace Easygoing.FiddlerCache.Model
         public CacheItem(Session session, string dir)
         {
             Url = session.fullUrl;
-            
-            Local = FileUtil.ReserveUriLocal(session.fullUrl, dir, session.oResponse.MIMEType);
-            ResponseHeaders = new Dictionary<string, string>();
-            Creation = DateTime.Now;
-            
-            session.utilDecodeResponse();
-            Length = session.responseBodyBytes.LongLength;
-            foreach (Fiddler.HTTPHeaderItem item in session.oResponse.headers)
+            try
             {
-                ResponseHeaders[item.Name]= item.Value;
+                Uri uri = new Uri(session.fullUrl);
+                Local = FileUtil.ReserveUriLocal(uri, dir, session.oResponse.MIMEType);
+                ResponseHeaders = new Dictionary<string, string>();
+                Creation = DateTime.Now;
+                Host = uri.Host;
+                session.utilDecodeResponse();
+                Length = session.responseBodyBytes.LongLength;
+                foreach (Fiddler.HTTPHeaderItem item in session.oResponse.headers)
+                {
+                    ResponseHeaders[item.Name] = item.Value;
+                }
+
+                FileInfo fi = new FileInfo(Local);
+                if (!fi.Directory.Exists)
+                {
+                    fi.Directory.Create();
+                }
+
+                File.WriteAllBytes(Local, session.responseBodyBytes);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
             
-            FileInfo fi = new FileInfo(Local);
-            if (!fi.Directory.Exists)
-            {
-                fi.Directory.Create();
-            }
-            
-            File.WriteAllBytes(Local, session.responseBodyBytes);
         }
 
         public void SetSessionResponse(Session oSession)

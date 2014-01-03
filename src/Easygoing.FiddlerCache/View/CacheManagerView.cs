@@ -17,12 +17,16 @@ namespace Easygoing.FiddlerCache.View
     public partial class CacheManagerView : UserControl
     {
         protected CacheManagerController cacheManagerController = null;
+        public Dictionary<string, BrightIdeasSoftware.OLVGroup> Groups { get; set; }
 
         public CacheManagerView(CacheManagerController cacheManagerController)
         {
+            
             InitializeComponent();
             InitTree();
             this.cacheManagerController = cacheManagerController;
+            Groups = new Dictionary<string, BrightIdeasSoftware.OLVGroup>();
+            TreeListViewCache.OLVGroups = new List<BrightIdeasSoftware.OLVGroup>();
         }
 
 
@@ -81,6 +85,20 @@ namespace Easygoing.FiddlerCache.View
             renderer.LinePen = new Pen(Color.Firebrick, 0.5f);
             renderer.LinePen.DashStyle = DashStyle.Dot;
 
+            olvColumnHost.AspectGetter = delegate(object x)
+            {
+                CacheItem item = x as CacheItem;
+                if (item != null)
+                {
+                    return item.Host;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            };
+
+
 
             olvColumnUrl.AspectGetter = delegate(object x)
             {
@@ -121,6 +139,7 @@ namespace Easygoing.FiddlerCache.View
                 }
             };
 
+
             olvColumnLength.AspectGetter = delegate(object x)
             {
                 CacheItem item = x as CacheItem;
@@ -134,6 +153,17 @@ namespace Easygoing.FiddlerCache.View
                 }
             };
 
+            TreeListViewCache.ItemsAdding += TreeListViewCache_ItemsAdding;
+            //TreeListViewCache.IndexOf();
+
+        }
+
+        void TreeListViewCache_ItemsAdding(object sender, BrightIdeasSoftware.ItemsAddingEventArgs e)
+        {
+            //foreach (ListViewItem item in e.ObjectsToAdd)
+            //{
+                
+            //}
         }
 
         private void ButtonEdit_Click(object sender, EventArgs e)

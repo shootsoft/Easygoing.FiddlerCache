@@ -32,6 +32,24 @@ namespace Easygoing.FiddlerCache.Util
             try
             {
                 Uri uri = new Uri(url);
+                path = ReserveUriLocal(uri, dir, mime);
+            }
+            catch (Exception ex)
+            {
+
+                Debug.WriteLine(ex);
+             
+            }
+            return path;
+            
+        }
+
+
+        public static string ReserveUriLocal(Uri uri, string dir, string mime)
+        {
+            string path = string.Empty;
+            try
+            {
                 string scheme = uri.Scheme;
                 string host = uri.Host;
                 if(uri.Port!=80)
@@ -71,7 +89,7 @@ namespace Easygoing.FiddlerCache.Util
                 }
                 if (filename.Length > 128)
                 { 
-                    filename = FileUtil.MD5(url) + ext;
+                    filename = FileUtil.MD5(uri.ToString()) + ext;
                 } 
                 path = Path.Combine(fi.DirectoryName, filename);
 

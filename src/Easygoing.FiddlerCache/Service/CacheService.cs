@@ -11,6 +11,11 @@ using System.Text;
 
 namespace Easygoing.FiddlerCache.Service
 {
+    /// <summary>
+    /// Index update delegate
+    /// </summary>
+    /// <param name="cacheOld"></param>
+    /// <param name="cacheNew"></param>
     public delegate void UpdateCacheItemDelegate(CacheItem cacheOld, CacheItem cacheNew);
 
 
@@ -20,13 +25,14 @@ namespace Easygoing.FiddlerCache.Service
 
         //protected RaptorDB.RaptorDB<string> db= null;
         protected Dictionary<string, CacheItem> cache = null;
-
+        protected Dictionary<string, CacheHost> cacheIndex = null;
 
         public CacheService()
         {
             CacheConfig = CacheConfig.Load();
             //db = new RaptorDB.RaptorDB<string>(CacheConfig.DBFile, false);
             cache = new Dictionary<string, CacheItem>();
+            cacheIndex = new Dictionary<string, CacheHost>();
         }
 
         public IEnumerable<CacheItem> Load()
@@ -99,6 +105,13 @@ namespace Easygoing.FiddlerCache.Service
             foreach (var session in oSessions)
             {
                 CacheItem item = new CacheItem(session, CacheConfig.CacheDir);
+                if (!cacheIndex.ContainsKey(item.Host))
+                {
+                    cacheIndex[item.Host] = new CacheHost();
+
+                }
+                cacheIndex[item.Host].Items[item.Url] = item;
+
                 if (cache.ContainsKey(item.Url))
                 {
                     if (updateDelegate != null)
@@ -110,19 +123,20 @@ namespace Easygoing.FiddlerCache.Service
                 {
                     list.Add(item);
                 }
-                AddCache(item);
+                cache[item.Url] = item;
+                //AddCache(item);
                 
             }
             SaveIndex();
             return list;
         }
 
-        public CacheItem AddCache(CacheItem item)
-        {   
-            //db.Set(item.Url, JsonConvert.SerializeObject(item));
-            cache[item.Url] = item;
-            return item;
-        }
+        //public CacheItem AddCache(CacheItem item)
+        //{   
+        //    //db.Set(item.Url, JsonConvert.SerializeObject(item));
+        //    cache[item.Url] = item;
+        //    return item;
+        //}
 
         public bool DeleteCache(IEnumerable<CacheItem> items)
         {
@@ -137,8 +151,8 @@ namespace Easygoing.FiddlerCache.Service
 
         public bool DeleteCache(CacheItem item, bool saveIndex)
         {
-            //db.RemoveKey(item.Url);
             cache.Remove(item.Url);
+            File.Delete(item.Local);
             if (saveIndex)
             {
                 SaveIndex();
