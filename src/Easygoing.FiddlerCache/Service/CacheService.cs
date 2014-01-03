@@ -25,14 +25,14 @@ namespace Easygoing.FiddlerCache.Service
 
         //protected RaptorDB.RaptorDB<string> db= null;
         protected Dictionary<string, CacheItem> cache = null;
-        protected Dictionary<string, CacheHost> cacheIndex = null;
+        //protected Dictionary<string, CacheHost> cacheIndex = null;
 
         public CacheService()
         {
             CacheConfig = CacheConfig.Load();
             //db = new RaptorDB.RaptorDB<string>(CacheConfig.DBFile, false);
             cache = new Dictionary<string, CacheItem>();
-            cacheIndex = new Dictionary<string, CacheHost>();
+            //cacheIndex = new Dictionary<string, CacheHost>();
         }
 
         public IEnumerable<CacheItem> Load()
@@ -105,12 +105,11 @@ namespace Easygoing.FiddlerCache.Service
             foreach (var session in oSessions)
             {
                 CacheItem item = new CacheItem(session, CacheConfig.CacheDir);
-                if (!cacheIndex.ContainsKey(item.Host))
-                {
-                    cacheIndex[item.Host] = new CacheHost();
-
-                }
-                cacheIndex[item.Host].Items[item.Url] = item;
+                //if (!cacheIndex.ContainsKey(item.Host))
+                //{
+                //    cacheIndex[item.Host] = new CacheHost();
+                //}
+                //cacheIndex[item.Host].Items[item.Url] = item;
 
                 if (cache.ContainsKey(item.Url))
                 {

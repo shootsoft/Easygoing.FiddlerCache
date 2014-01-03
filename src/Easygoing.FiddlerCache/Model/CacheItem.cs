@@ -10,14 +10,15 @@ using System.Text;
 namespace Easygoing.FiddlerCache.Model
 {
     [Serializable]
-    public class CacheItem
+    public class CacheItem : CacheNode
     {
         public string Url { get;  set; }
+        public string PathAndQuery { get; set; }
         public string Local { get;  set; }
         public DateTime Creation { get; set; }
         public long Length { get; set; }
-        public string Host { get; set; }
         public Dictionary<string, string> ResponseHeaders { get;  set; }
+        public int ImageIndex { get; set; }
 
         public CacheItem()
         {
@@ -33,6 +34,8 @@ namespace Easygoing.FiddlerCache.Model
             try
             {
                 Uri uri = new Uri(session.fullUrl);
+                PathAndQuery = uri.PathAndQuery;
+                ImageIndex = session.ViewItem.ImageIndex;
                 Local = FileUtil.ReserveUriLocal(uri, dir, session.oResponse.MIMEType);
                 ResponseHeaders = new Dictionary<string, string>();
                 Creation = DateTime.Now;

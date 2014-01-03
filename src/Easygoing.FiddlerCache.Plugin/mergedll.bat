@@ -1,0 +1,1 @@
+..\..\..\packages\ilmerge.2.13.0307\ilmerge /ndebug /target:library /targetplatform:v4 /out:Easygoing.FiddlerCache.Plugin.dll Easygoing.FiddlerCache.Plugin.dll /log Easygoing.FiddlerCache.dll Newtonsoft.Json.dll ObjectListView.dll

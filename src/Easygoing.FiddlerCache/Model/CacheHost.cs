@@ -6,9 +6,8 @@ using System.Text;
 namespace Easygoing.FiddlerCache.Model
 {
     [Serializable]
-    public class CacheHost
+    public class CacheHost :CacheNode
     {
-        public string Host { get; set; }
         public Dictionary<string, CacheItem> Items { get; set; }
         
         public CacheHost()

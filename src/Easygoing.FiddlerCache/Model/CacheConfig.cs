@@ -14,6 +14,7 @@ namespace Easygoing.FiddlerCache.Model
         public string CacheDir { get; set; }
         public bool Enabled { get; set; }
         public string Editor { get; set; }
+        public bool HideProperties { get; set; }
 
         internal static CacheConfig Load()
         {

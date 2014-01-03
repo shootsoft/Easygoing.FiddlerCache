@@ -17,7 +17,8 @@ namespace Easygoing.FiddlerCache.View
     public partial class CacheManagerView : UserControl
     {
         protected CacheManagerController cacheManagerController = null;
-        public Dictionary<string, BrightIdeasSoftware.OLVGroup> Groups { get; set; }
+        //public Dictionary<string, BrightIdeasSoftware.OLVGroup> Groups { get; set; }
+        public Dictionary<string, CacheHost> CacheIndex {get;set;}
 
         public CacheManagerView(CacheManagerController cacheManagerController)
         {
@@ -25,48 +26,23 @@ namespace Easygoing.FiddlerCache.View
             InitializeComponent();
             InitTree();
             this.cacheManagerController = cacheManagerController;
-            Groups = new Dictionary<string, BrightIdeasSoftware.OLVGroup>();
-            TreeListViewCache.OLVGroups = new List<BrightIdeasSoftware.OLVGroup>();
+            CacheIndex = new Dictionary<string, CacheHost>();
         }
 
 
         private void ButtonDelete_Click(object sender, EventArgs e)
         {
-            Delete();
+            cacheManagerController.OnDeleteCacheAction();
         }
 
-        private void Delete()
-        {
-            if (MessageBox.Show("Delete selected cache?", "Confirm Deletion", MessageBoxButtons.YesNo
-                , MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                IList<CacheItem> items = new List<CacheItem>();
-                foreach (CacheItem item in TreeListViewCache.SelectedObjects)
-                {
-                    items.Add(item);
-                }
-                if (items != null)
-                {
-                    cacheManagerController.DeleteCache(items);
-                }
-            }
-        }
+        
 
         private void ButtonClear_Click(object sender, EventArgs e)
         {
-            ClearCache();
+            cacheManagerController.OnClearCacheAction();
         }
 
-        private void ClearCache()
-        {
-            if (MessageBox.Show("Clear all the cache?", "Confirm Clearance", MessageBoxButtons.YesNo
-                , MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                TreeListViewCache.Items.Clear();
-                Debug.WriteLine(TreeListViewCache.Items.Count);
-                cacheManagerController.ClearCache();
-            }
-        }
+        
 
         internal void LoadViewItem(IEnumerable<Model.CacheItem> items)
         {
@@ -85,31 +61,76 @@ namespace Easygoing.FiddlerCache.View
             renderer.LinePen = new Pen(Color.Firebrick, 0.5f);
             renderer.LinePen.DashStyle = DashStyle.Dot;
 
-            olvColumnHost.AspectGetter = delegate(object x)
+            TreeListViewCache.CanExpandGetter = delegate(object x)
             {
-                CacheItem item = x as CacheItem;
-                if (item != null)
+                return x is CacheHost;
+            };
+
+            TreeListViewCache.ChildrenGetter = delegate(object x)
+            {
+                CacheHost h = x as CacheHost;
+                if (h != null)
                 {
-                    return item.Host;
+                    return h.Items.Values;
                 }
                 else
                 {
-                    return string.Empty;
+                    return new CacheItem[0];
                 }
             };
 
+            //olvColumnHost.AspectGetter = delegate(object x)
+            //{
+            //    CacheNode item = x as CacheNode;
+            //    if (item != null)
+            //    {
+            //        return item.Host;
+            //    }
+            //    else
+            //    {
+            //        return string.Empty;
+            //    }
+            //};
 
+            olvColumnUrl.ImageGetter = delegate(object x)
+            {
+                if (x is CacheItem)
+                {
+                    CacheItem item = x as CacheItem;
+                    if (cacheManagerController.ImageList != null
+                        && cacheManagerController.ImageList.Images.Count > item.ImageIndex)
+                    {
+                        return cacheManagerController.ImageList.Images[item.ImageIndex];
+                    }
+                    else
+                    {
+                        return ImageListIcon.Images[0];
+                    }
+                }
+                else
+                {
+                    return ImageListIcon.Images[1];
+                }
+            };
 
             olvColumnUrl.AspectGetter = delegate(object x)
             {
                 CacheItem item = x as CacheItem;
                 if (item != null)
                 {
-                    return item.Url;
+                    return item.PathAndQuery;
                 }
                 else
                 {
-                    return string.Empty;
+                    CacheNode node = x as CacheNode;
+                    if(node!=null)
+                    {
+                        return node.Host;
+                    } 
+                    else 
+                    {
+                        return string.Empty;
+                    }
                 }
             };
 
@@ -153,63 +174,57 @@ namespace Easygoing.FiddlerCache.View
                 }
             };
 
-            TreeListViewCache.ItemsAdding += TreeListViewCache_ItemsAdding;
-            //TreeListViewCache.IndexOf();
 
         }
 
-        void TreeListViewCache_ItemsAdding(object sender, BrightIdeasSoftware.ItemsAddingEventArgs e)
-        {
-            //foreach (ListViewItem item in e.ObjectsToAdd)
-            //{
-                
-            //}
-        }
 
         private void ButtonEdit_Click(object sender, EventArgs e)
         {
-            if (TreeListViewCache.SelectedObject != null)
-            {
-                CacheItem item = TreeListViewCache.SelectedObject as CacheItem;
-                cacheManagerController.Edit(item);
-            }
+            cacheManagerController.OnEditCacheAction();
 
         }
 
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            EditCache();
+            cacheManagerController.OnEditCacheAction();
 
         }
 
-        private void EditCache()
-        {
-            if (TreeListViewCache.SelectedObject != null)
-            {
-                CacheItem item = TreeListViewCache.SelectedObject as CacheItem;
-                cacheManagerController.Edit(item);
-            }
-        }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Delete();
+            cacheManagerController.OnDeleteCacheAction ();
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClearCache();
+            cacheManagerController.OnClearCacheAction();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cacheManagerController.Open();
+            cacheManagerController.OnOpenCacheItemAction();
         }
 
         private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cacheManagerController.OpenDirectory();
+            cacheManagerController.OnOpenDirectoryAction();
+        }
+
+        private void ButtonEnabled_Click(object sender, EventArgs e)
+        {
+            cacheManagerController.OnUIEnabledAction();
+        }
+
+        private void TreeListViewCache_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cacheManagerController.OnUISelectedChangedAction();
+        }
+
+        private void ButtonHideProperty_Click(object sender, EventArgs e)
+        {
+            cacheManagerController.OnUIHidePropertiesAction();
         }
     }
 }
