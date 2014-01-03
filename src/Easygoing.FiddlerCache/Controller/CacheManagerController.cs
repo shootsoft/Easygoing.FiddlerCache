@@ -4,6 +4,7 @@ using Easygoing.FiddlerCache.View;
 using Fiddler;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,9 @@ namespace Easygoing.FiddlerCache.Controller
         public CacheManagerController()
         {
            cacheService = new CacheService();
-           View = new CacheManagerView();
-           AddCache(cacheService.Load());
-
+           View = new CacheManagerView(this);
+           AddCacheView(cacheService.Load());
+           CacheConfig = cacheService.CacheConfig;
         }
         
         /// <summary>
@@ -54,10 +55,15 @@ namespace Easygoing.FiddlerCache.Controller
         /// </summary>
         public void BindFiddlerMenu()
         {
-            MenuItem menuRegex = new MenuItem("Add Cache");
-            menuRegex.Click += OnMenuAddCache_Click;
-            Fiddler.FiddlerApplication.UI.mnuTools.MenuItems.Add(menuRegex);
-            Fiddler.FiddlerApplication.UI.mnuSessionContext.MenuItems.Add(menuRegex);
+            MenuItem menuAddCache = new MenuItem("Add Cache");
+            menuAddCache.Click += OnMenuAddCache_Click;
+            Fiddler.FiddlerApplication.UI.mnuTools.MenuItems.Add(menuAddCache);
+            Fiddler.FiddlerApplication.UI.mnuSessionContext.MenuItems.Add(menuAddCache);
+
+            MenuItem menuAddCache2 = new MenuItem("Add Cache Without Query");
+            menuAddCache2.Click += OnMenuAddCache2_Click;
+            Fiddler.FiddlerApplication.UI.mnuTools.MenuItems.Add(menuAddCache2);
+            Fiddler.FiddlerApplication.UI.mnuSessionContext.MenuItems.Add(menuAddCache2);
         }
 
         public void Filter(Session oSession) 
@@ -68,8 +74,29 @@ namespace Easygoing.FiddlerCache.Controller
             }
         }
 
-        public void AddCache(IEnumerable<CacheItem> items)
+        public void Edit(CacheItem item)
         {
+            try
+            {
+                if (File.Exists(CacheConfig.Editor))
+                {
+                    Process.Start(CacheConfig.Editor, item.Local);
+                }
+                else
+                {
+                    Process.Start("notepad", item.Local);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+
+        public void AddCacheView(IEnumerable<CacheItem> items)
+        {
+
             foreach (var item in items)
             {
                 View.TreeListViewCache.AddObject(item);
@@ -77,24 +104,29 @@ namespace Easygoing.FiddlerCache.Controller
 
         }
 
-        public bool DeleteCache(IEnumerable<string> urls)
+        public bool DeleteCache(IEnumerable<CacheItem> items)
         {
-            if (cacheService.DeleteCache(urls))
-            { 
-                //View.TreeListViewCache.RemoveObject
+            
+            if (cacheService.DeleteCache(items))
+            {
+                foreach (var item in items)
+                {
+                    View.TreeListViewCache.RemoveObject(item);
+                }
+                //View.TreeListViewCache.RemoveObjects(items);
             }
             return true;
         }
 
-
-        public bool DeleteCache(string url) 
-        {
-            return cacheService.DeleteCache(url);
-        }
-
         public bool ClearCache()
         {
-            return cacheService.ClearCache();
+            if (cacheService.ClearCache())
+            {
+                View.TreeListViewCache.ClearObjects();
+                View.TreeListViewCache.Items.Clear();
+            }
+            return true;
+            
         }
 
         public void Dispose()
@@ -108,12 +140,74 @@ namespace Easygoing.FiddlerCache.Controller
             sessionListView.SelectedItems.Count > 0)
             {
                 List<Session> sessionList = new List<Session>();
-                Fiddler.Session session = sessionListView.SelectedItems[0].Tag as Session;
-                sessionList.Add(session);
-                IEnumerable<CacheItem> items = cacheService.AddCache(sessionList);
-                this.AddCache(items);
+                foreach (ListViewItem item in sessionListView.SelectedItems)
+                {
+                    Fiddler.Session session = item.Tag as Session;
+                    sessionList.Add(session);
+                }
+                IEnumerable<CacheItem> items = cacheService.AddCache(sessionList, UpdateCacheItemDelegate);
+                this.AddCacheView(items);
             }
         }
 
+        protected void OnMenuAddCache2_Click(object sender, EventArgs e)
+        {
+            if (sessionListView != null &&
+             sessionListView.SelectedItems.Count > 0)
+            {
+                List<Session> sessionList = new List<Session>();
+                foreach (ListViewItem item in sessionListView.SelectedItems)
+                {
+                    Fiddler.Session session = item.Tag as Session;
+                    if (session.fullUrl.Contains('?'))
+                    { 
+                        session.fullUrl = session.fullUrl.Substring(0,  session.fullUrl.IndexOf('?'));
+                    }
+                    sessionList.Add(session);
+                }
+                IEnumerable<CacheItem> items = cacheService.AddCache(sessionList, UpdateCacheItemDelegate);
+                this.AddCacheView(items);
+            }
+        }
+
+        public void UpdateCacheItemDelegate(CacheItem cacheOld, CacheItem cacheNew)
+        {
+            View.TreeListViewCache.RemoveObject(cacheOld);
+            View.TreeListViewCache.AddObject(cacheNew);
+        }
+
+
+
+        public void Open()
+        {
+            CacheItem item = View.TreeListViewCache.SelectedObject as CacheItem;
+            if (item != null)
+            {
+                try
+                {
+                    Process.Start(item.Local);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+            }
+        }
+
+        public void OpenDirectory()
+        {
+            CacheItem item = View.TreeListViewCache.SelectedObject as CacheItem;
+            if (item != null)
+            {
+                try
+                {
+                    Process.Start(new FileInfo(item.Local).DirectoryName);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+            }
+        }
     }
 }

@@ -31,17 +31,39 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CacheManagerView));
             this.TreeListViewCache = new BrightIdeasSoftware.TreeListView();
+            this.olvColumnUrl = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnCreationTime = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.ButtonClear = new System.Windows.Forms.ToolStripButton();
+            this.olvColumnLength = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.TreeListViewCache)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // TreeListViewCache
             // 
+            this.TreeListViewCache.AllColumns.Add(this.olvColumnUrl);
+            this.TreeListViewCache.AllColumns.Add(this.olvColumnCreationTime);
+            this.TreeListViewCache.AllColumns.Add(this.olvColumnLength);
+            this.TreeListViewCache.AllColumns.Add(this.olvColumnPath);
+            this.TreeListViewCache.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumnUrl,
+            this.olvColumnCreationTime,
+            this.olvColumnLength,
+            this.olvColumnPath});
+            this.TreeListViewCache.ContextMenuStrip = this.contextMenuStrip1;
             this.TreeListViewCache.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TreeListViewCache.Location = new System.Drawing.Point(0, 25);
             this.TreeListViewCache.Name = "TreeListViewCache";
@@ -52,6 +74,70 @@
             this.TreeListViewCache.UseCompatibleStateImageBehavior = false;
             this.TreeListViewCache.View = System.Windows.Forms.View.Details;
             this.TreeListViewCache.VirtualMode = true;
+            // 
+            // olvColumnUrl
+            // 
+            this.olvColumnUrl.CellPadding = null;
+            this.olvColumnUrl.Text = "Url";
+            this.olvColumnUrl.Width = 186;
+            // 
+            // olvColumnCreationTime
+            // 
+            this.olvColumnCreationTime.CellPadding = null;
+            this.olvColumnCreationTime.Text = "Creation Time";
+            this.olvColumnCreationTime.Width = 151;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.openDirectoryToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.deleteToolStripMenuItem,
+            this.clearToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(164, 120);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // openDirectoryToolStripMenuItem
+            // 
+            this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
+            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.openDirectoryToolStripMenuItem.Text = "Open Directory";
+            this.openDirectoryToolStripMenuItem.Click += new System.EventHandler(this.openDirectoryToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(160, 6);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -73,6 +159,7 @@
             this.ButtonEdit.Name = "ButtonEdit";
             this.ButtonEdit.Size = new System.Drawing.Size(49, 22);
             this.ButtonEdit.Text = "Edit";
+            this.ButtonEdit.Click += new System.EventHandler(this.ButtonEdit_Click);
             // 
             // toolStripSeparator1
             // 
@@ -97,6 +184,16 @@
             this.ButtonClear.Text = "Clear";
             this.ButtonClear.Click += new System.EventHandler(this.ButtonClear_Click);
             // 
+            // olvColumnLength
+            // 
+            this.olvColumnLength.CellPadding = null;
+            this.olvColumnLength.Text = "Length";
+            // 
+            // olvColumnPath
+            // 
+            this.olvColumnPath.CellPadding = null;
+            this.olvColumnPath.Text = "Path";
+            // 
             // CacheManagerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -106,6 +203,7 @@
             this.Name = "CacheManagerView";
             this.Size = new System.Drawing.Size(530, 361);
             ((System.ComponentModel.ISupportInitialize)(this.TreeListViewCache)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -121,5 +219,17 @@
         private System.Windows.Forms.ToolStripButton ButtonDelete;
         private System.Windows.Forms.ToolStripButton ButtonClear;
         public BrightIdeasSoftware.TreeListView TreeListViewCache;
+     
+        private BrightIdeasSoftware.OLVColumn olvColumnUrl;
+        private BrightIdeasSoftware.OLVColumn olvColumnCreationTime;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openDirectoryToolStripMenuItem;
+        private BrightIdeasSoftware.OLVColumn olvColumnLength;
+        private BrightIdeasSoftware.OLVColumn olvColumnPath;
     }
 }

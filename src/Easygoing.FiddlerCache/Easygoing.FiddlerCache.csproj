@@ -39,12 +39,10 @@
     <Reference Include="ObjectListView">
       <HintPath>..\packages\Unofficial.ObjectListView.2.6.0\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="RaptorDB">
-      <HintPath>..\packages\RaptorDB.2.6\lib\net40\RaptorDB.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -59,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\CacheService.cs" />
     <Compile Include="Util\FileUtil.cs" />
+    <Compile Include="Util\MimeExt.cs" />
     <Compile Include="View\CacheManagerView.cs">
       <SubType>UserControl</SubType>
     </Compile>

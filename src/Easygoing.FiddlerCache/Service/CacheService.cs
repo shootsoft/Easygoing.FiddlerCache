@@ -6,101 +6,143 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace Easygoing.FiddlerCache.Service
 {
+    public delegate void UpdateCacheItemDelegate(CacheItem cacheOld, CacheItem cacheNew);
+
+
     public class CacheService : IDisposable
     {
         public CacheConfig CacheConfig { get; set; }
 
-        protected RaptorDB.RaptorDB<string> db= null;
+        //protected RaptorDB.RaptorDB<string> db= null;
         protected Dictionary<string, CacheItem> cache = null;
 
 
         public CacheService()
         {
             CacheConfig = CacheConfig.Load();
-            db = new RaptorDB.RaptorDB<string>(CacheConfig.DBFile, false);
+            //db = new RaptorDB.RaptorDB<string>(CacheConfig.DBFile, false);
             cache = new Dictionary<string, CacheItem>();
         }
 
         public IEnumerable<CacheItem> Load()
         {
-            List<CacheItem> list = new List<CacheItem>();
-
-            IEnumerable<RaptorDB.StorageData> items = db.EnumerateStorageFile();
-            foreach (var item in items)
+            if (File.Exists(CacheConfig.DBFile))
             {
-                string val = Encoding.UTF8.GetString(item.Data);
-                CacheItem c = JsonConvert.DeserializeObject<CacheItem>(val);
-                cache[c.Url] = c;
-                list.Add(c);
+                using (FileStream fs = new FileStream(CacheConfig.DBFile, FileMode.Open))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Binder = new InsideCOMBinder();
+            
+                    object obj = formatter.Deserialize(fs);
+                    cache = obj as Dictionary<string, CacheItem>;
+                    if (cache == null) cache = new Dictionary<string, CacheItem>();
+                    return cache.Values;
+                }
             }
-            return list;
+            else 
+            { 
+                return new CacheItem[0];
+            }
+            //List<CacheItem> list = new List<CacheItem>();
+            //int count = (int)db.Count();
+            //for (int i = 0; i < count; i++)
+            //{
+            //    string val = db.FetchRecordString(i);
+            //    CacheItem c = JsonConvert.DeserializeObject<CacheItem>(val);
+            //    cache[c.Url] = c;
+            //    list.Add(c);
+            //}
+            //return list;
+        }
+
+        private class InsideCOMBinder : System.Runtime.Serialization.SerializationBinder
+        {
+            public override Type BindToType(string assemblyName, string typeName)
+            {
+                return Type.GetType(String.Format("{0}, {1}", typeName, assemblyName));
+            }
         }
 
         public bool LoadFromCache(Session oSession)
         {
-            string outCache;
-            if (db.Get(oSession.fullUrl, out outCache))
+            bool success = false;
+            string key = oSession.fullUrl;
+            if (!cache.ContainsKey(key))
             {
-                
-                CacheItem item = null;
-                if (cache.ContainsKey(oSession.fullUrl))
-                {
-                    item = cache[oSession.fullUrl];
+                if (key.Contains('?')) {
+                    key = key.Substring(0, key.IndexOf('?'));
                 }
-                else
-                {
-                    item = JsonConvert.DeserializeObject<CacheItem>(outCache);
-                }
+            }
+            if (cache.ContainsKey(key)) 
+            {
+                oSession.utilCreateResponseAndBypassServer();
+                CacheItem item = cache[key];
                 item.SetSessionResponse(oSession);
                 if (File.Exists(item.Local))
                 {
-                    oSession.LoadResponseFromFile(item.Local);
+                    success = oSession.LoadResponseFromFile(item.Local);
                 }
-                return true;
             }
-            else
-            {
-                return false;
-            }
+
+
+            return success;
         }
 
-        public List<CacheItem> AddCache(IEnumerable<Session> oSessions)
+        public List<CacheItem> AddCache(IEnumerable<Session> oSessions, UpdateCacheItemDelegate updateDelegate)
         {
             List<CacheItem> list = new List<CacheItem>();
             foreach (var session in oSessions)
             {
-                 CacheItem c = AddCache(session);
-                 list.Add(c);
+                CacheItem item = new CacheItem(session, CacheConfig.CacheDir);
+                if (cache.ContainsKey(item.Url))
+                {
+                    if (updateDelegate != null)
+                    {   
+                        updateDelegate(cache[item.Url], item);
+                    }
+                }
+                else
+                {
+                    list.Add(item);
+                }
+                AddCache(item);
+                
             }
+            SaveIndex();
             return list;
         }
 
-        public CacheItem AddCache(Session oSession)
-        {
-            CacheItem item = new CacheItem(oSession, CacheConfig.CacheDir);
-            db.Set(oSession.fullUrl, JsonConvert.SerializeObject(item));
-            cache[oSession.fullUrl] = item;
+        public CacheItem AddCache(CacheItem item)
+        {   
+            //db.Set(item.Url, JsonConvert.SerializeObject(item));
+            cache[item.Url] = item;
             return item;
         }
 
-        public bool DeleteCache(IEnumerable<string> urls)
+        public bool DeleteCache(IEnumerable<CacheItem> items)
         {
-            foreach (var url in urls)
+            foreach (var item in items)
             {
-                DeleteCache(url);
+                DeleteCache(item, false);
             }
+            SaveIndex();
+            //db.SaveIndex();
             return true;
         }
 
-        public bool DeleteCache(string url)
+        public bool DeleteCache(CacheItem item, bool saveIndex)
         {
-            db.RemoveKey(url);
-            cache.Remove(url);
-            db.SaveIndex();
+            //db.RemoveKey(item.Url);
+            cache.Remove(item.Url);
+            if (saveIndex)
+            {
+                SaveIndex();
+            }
             return true;
         }
 
@@ -108,11 +150,21 @@ namespace Easygoing.FiddlerCache.Service
         {
             try
             {
-                lock (db)
+                lock (cache)
                 {
-                    db.Shutdown();
+                    cache.Clear();
                     File.Delete(CacheConfig.DBFile);
-                    db = new RaptorDB.RaptorDB<string>(CacheConfig.DBFile, false);
+                    //db.Shutdown();
+                    //string[] files = Directory.GetFiles(CacheConfig.Path, "db.*");
+                    //foreach (var item in files)
+                    //{
+                    //    File.Delete(item);
+                    //}
+                    if(Directory.Exists(CacheConfig.CacheDir))
+                    {
+                        Directory.Delete(CacheConfig.CacheDir, true);
+                    }
+                    //db = new RaptorDB.RaptorDB<string>(CacheConfig.DBFile, false);
                 }
             }
             catch (Exception ex)
@@ -120,13 +172,27 @@ namespace Easygoing.FiddlerCache.Service
                 Debug.WriteLine(ex);
 
             }
-            return false;
+            return true;
+        }
+
+        public void SaveIndex()
+        {
+            using(FileStream fs = new FileStream(CacheConfig.DBFile, FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, cache);   
+            }
         }
 
         public void Dispose()
         {
-            db.SaveIndex();
-            db.Shutdown();
+            SaveIndex();
+            CacheConfig.Save();
+        }
+
+        internal Model.CacheConfig InitConfig()
+        {
+            return CacheConfig;
         }
     }
 }

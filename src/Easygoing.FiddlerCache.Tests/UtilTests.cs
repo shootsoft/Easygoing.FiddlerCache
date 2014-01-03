@@ -35,10 +35,19 @@ namespace Easygoing.FiddlerCache.Tests
         public void TestReserveUriLocal()
         {
             string url = "http://smsapi.micloud.xiaomi.net/mic/sms/v2/user/24018380/bindId/7275085/full?syncTag=ooOlttAlhNkcuP7KQvaQm0oe%2Bvgq2WWnK0k7LcP3Wdg%3D&limit=J73iwc%2BZDLnGZ0a7l3EirA%3D%3D&signature=t951reXtMK59km2r49ZuhVsJ8dw%3D";
-            string expected = @"c:\http\smsapi.micloud.xiaomi.net\mic\sms\v2\user\24018380\bindId\7275085\full_syncTag=ooOlttAlhNkcuP7KQvaQm0oe%2Bvgq2WWnK0k7LcP3Wdg%3D&limit=J73iwc%2BZDLnGZ0a7l3EirA%3D%3D&signature=t951reXtMK59km2r49ZuhVsJ8dw%3D";
-            Assert.AreEqual(expected, FileUtil.ReserveUriLocal(url, "c:\\"));
-            Assert.AreEqual(expected, FileUtil.ReserveUriLocal(url, "c:"));
-            Debug.WriteLine(FileUtil.ReserveUriLocal(url, "c:\\"));
+            string expected = @"c:\http\smsapi.micloud.xiaomi.net\mic\sms\v2\user\24018380\bindId\7275085\B60E0A663A61F230124B478C328CBEEC.cache";
+            Debug.WriteLine(FileUtil.ReserveUriLocal(url, "c:\\", ""));
+            Assert.AreEqual(expected, FileUtil.ReserveUriLocal(url, "c:\\", ""));
+            Assert.AreEqual(expected, FileUtil.ReserveUriLocal(url, "c:", ""));
+
+
+            url = "http://fm.baidu.com/static/flash/fmp_mp3.swf?_t=1388689382975?_m3_0_0.9295997833714762";
+            expected = @"c:\http\fm.baidu.com\static\flash\fmp_mp3.swf__t=1388689382975__m3_0_0.9295997833714762.swf";
+            Debug.WriteLine(FileUtil.ReserveUriLocal(url, "c:\\", ".http"));
+            Assert.AreEqual(expected, FileUtil.ReserveUriLocal(url, "c:\\", ".http"));
+            Assert.AreEqual(expected, FileUtil.ReserveUriLocal(url, "c:", ".http"));
+            
+
         }
     }
 }

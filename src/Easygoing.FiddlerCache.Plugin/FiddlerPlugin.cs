@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Easygoing.FiddlerCache.Plugin
 {
-    public class FiddlerPlugin : IAutoTamper
+    public class FiddlerPlugin : IAutoTamper, IDisposable
     {
         protected CacheManagerController cacheController;
 
@@ -53,6 +53,11 @@ namespace Easygoing.FiddlerCache.Plugin
             cacheController.BindFiddler();
             cacheController.BindFiddlerMenu();
 
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

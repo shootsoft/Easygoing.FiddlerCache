@@ -13,6 +13,7 @@ namespace Easygoing.FiddlerCache.Model
         public string DBFile { get; set; }
         public string CacheDir { get; set; }
         public bool Enabled { get; set; }
+        public string Editor { get; set; }
 
         internal static CacheConfig Load()
         {
@@ -24,7 +25,7 @@ namespace Easygoing.FiddlerCache.Model
                 Directory.CreateDirectory(cfg.Path);
             }
             cfg.ConfigFile = System.IO.Path.Combine(cfg.Path, "config.json");
-            cfg.DBFile = System.IO.Path.Combine(cfg.Path, "db.raptordb");
+            cfg.DBFile = System.IO.Path.Combine(cfg.Path, "db.cache");
             cfg.CacheDir = System.IO.Path.Combine(cfg.Path, "Files");
 
             if (!File.Exists(cfg.ConfigFile))
@@ -38,7 +39,7 @@ namespace Easygoing.FiddlerCache.Model
             return cfg;
         }
 
-        private void Save()
+        public void Save()
         {
             string cfg =
             Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
