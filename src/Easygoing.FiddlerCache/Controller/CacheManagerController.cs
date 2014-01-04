@@ -240,6 +240,7 @@ namespace Easygoing.FiddlerCache.Controller
                 }
                 View.CacheIndex[item.Host].Items[item.Url] = item;
             }
+            View.TreeListViewCache.RebuildAll(true);
 
         }
         #endregion
