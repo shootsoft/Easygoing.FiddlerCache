@@ -185,6 +185,13 @@ namespace Easygoing.FiddlerCache.Controller
         }
 
         #region Add cache actions
+
+        public void AddCache(IEnumerable<Session> sessions)
+        {
+            IEnumerable<CacheItem> items = cacheService.AddCache(sessions, OnUpdateCacheItemAction);
+            this.OnAddCacheViewAction(items);
+        }
+
         protected void OnMenuAddCache_Click(object sender, EventArgs e)
         {
             OnAddSessions2CacheAction(true);
@@ -210,8 +217,7 @@ namespace Easygoing.FiddlerCache.Controller
                     }
                     sessionList.Add(session);
                 }
-                IEnumerable<CacheItem> items = cacheService.AddCache(sessionList, OnUpdateCacheItemAction);
-                this.OnAddCacheViewAction(items);
+                AddCache(sessionList);
             }
         }
 

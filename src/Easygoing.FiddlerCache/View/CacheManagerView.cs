@@ -245,6 +245,27 @@ namespace Easygoing.FiddlerCache.View
             cacheManagerController.OnShowSystemMenu(System.Windows.Forms.Cursor.Position);
         }
 
+        private void TreeListViewCache_DragDrop(object sender, DragEventArgs e)
+        {
+            Fiddler.Session[] sessions = e.Data.GetData(typeof(Fiddler.Session[])) as Fiddler.Session[];
+            if (sessions != null)
+            {
+                cacheManagerController.AddCache(sessions);
+            }
+        }
+
+
+        private void TreeListViewCache_DragEnter(object sender, DragEventArgs e)
+        {
+            Fiddler.Session[] sessions = e.Data.GetData(typeof(Fiddler.Session[])) as Fiddler.Session[];
+            if (sessions != null)
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+
+            
+        }
+
 
     }
 }

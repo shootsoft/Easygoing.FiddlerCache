@@ -11,6 +11,7 @@
     <AssemblyName>Easygoing.FiddlerCache</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,9 +33,6 @@
   <ItemGroup>
     <Reference Include="Fiddler">
       <HintPath>..\packages\Fiddler\Fiddler.exe</HintPath>
-    </Reference>
-    <Reference Include="GenericDictionaryEditor">
-      <HintPath>..\packages\GenDictEdit.1.1.0\lib\net20\GenericDictionaryEditor.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>

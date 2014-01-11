@@ -70,6 +70,7 @@
             this.TreeListViewCache.AllColumns.Add(this.olvColumnLength);
             this.TreeListViewCache.AllColumns.Add(this.olvColumnCreationTime);
             this.TreeListViewCache.AllColumns.Add(this.olvColumnPath);
+            this.TreeListViewCache.AllowDrop = true;
             this.TreeListViewCache.CheckBoxes = true;
             this.TreeListViewCache.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnUrl,
@@ -89,6 +90,8 @@
             this.TreeListViewCache.View = System.Windows.Forms.View.Details;
             this.TreeListViewCache.VirtualMode = true;
             this.TreeListViewCache.SelectedIndexChanged += new System.EventHandler(this.TreeListViewCache_SelectedIndexChanged);
+            this.TreeListViewCache.DragDrop += new System.Windows.Forms.DragEventHandler(this.TreeListViewCache_DragDrop);
+            this.TreeListViewCache.DragEnter += new System.Windows.Forms.DragEventHandler(this.TreeListViewCache_DragEnter);
             // 
             // olvColumnUrl
             // 

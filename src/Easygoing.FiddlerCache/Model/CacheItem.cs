@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Wexman.Design;
+
 
 namespace Easygoing.FiddlerCache.Model
 {
