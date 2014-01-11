@@ -65,6 +65,7 @@
     <Compile Include="Service\CacheService.cs" />
     <Compile Include="Util\FileUtil.cs" />
     <Compile Include="Util\MimeExt.cs" />
+    <Compile Include="Util\ShellContextMenu.cs" />
     <Compile Include="View\CacheManagerView.cs">
       <SubType>UserControl</SubType>
     </Compile>

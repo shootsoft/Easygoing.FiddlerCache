@@ -86,13 +86,15 @@ namespace Easygoing.FiddlerCache.Service
             }
             if (cache.ContainsKey(key)) 
             {
-                oSession.utilCreateResponseAndBypassServer();
                 CacheItem item = cache[key];
-                item.SetSessionResponse(oSession);
-                if (File.Exists(item.Local))
+                if (item.CheckState == System.Windows.Forms.CheckState.Checked
+                    && File.Exists(item.Local))
                 {
+                    oSession.utilCreateResponseAndBypassServer();
+                    item.SetSessionResponse(oSession);                    
                     success = oSession.LoadResponseFromFile(item.Local);
                 }
+                
             }
 
 

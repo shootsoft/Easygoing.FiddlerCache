@@ -47,12 +47,14 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.ButtonClear = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ButtonHideProperty = new System.Windows.Forms.ToolStripButton();
             this.ButtonEnabled = new System.Windows.Forms.ToolStripButton();
             this.ImageListIcon = new System.Windows.Forms.ImageList(this.components);
             this.SplitContainerMain = new System.Windows.Forms.SplitContainer();
             this.PropertyGrid = new System.Windows.Forms.PropertyGrid();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.ButtonHideProperty = new System.Windows.Forms.ToolStripButton();
+            this.ToolStripMenuItemSystemMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.TreeListViewCache)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -68,6 +70,7 @@
             this.TreeListViewCache.AllColumns.Add(this.olvColumnLength);
             this.TreeListViewCache.AllColumns.Add(this.olvColumnCreationTime);
             this.TreeListViewCache.AllColumns.Add(this.olvColumnPath);
+            this.TreeListViewCache.CheckBoxes = true;
             this.TreeListViewCache.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnUrl,
             this.olvColumnLength,
@@ -84,6 +87,7 @@
             this.TreeListViewCache.UseCompatibleStateImageBehavior = false;
             this.TreeListViewCache.View = System.Windows.Forms.View.Details;
             this.TreeListViewCache.VirtualMode = true;
+            this.TreeListViewCache.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.TreeListViewCache_ItemChecked);
             this.TreeListViewCache.SelectedIndexChanged += new System.EventHandler(this.TreeListViewCache_SelectedIndexChanged);
             // 
             // olvColumnUrl
@@ -117,9 +121,11 @@
             this.openDirectoryToolStripMenuItem,
             this.toolStripMenuItem1,
             this.deleteToolStripMenuItem,
-            this.clearToolStripMenuItem});
+            this.clearToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.ToolStripMenuItemSystemMenu});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(164, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(164, 148);
             // 
             // editToolStripMenuItem
             // 
@@ -209,6 +215,20 @@
             this.ButtonClear.Text = "Clear";
             this.ButtonClear.Click += new System.EventHandler(this.ButtonClear_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // ButtonHideProperty
+            // 
+            this.ButtonHideProperty.Image = ((System.Drawing.Image)(resources.GetObject("ButtonHideProperty.Image")));
+            this.ButtonHideProperty.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonHideProperty.Name = "ButtonHideProperty";
+            this.ButtonHideProperty.Size = new System.Drawing.Size(119, 22);
+            this.ButtonHideProperty.Text = "Hide properties";
+            this.ButtonHideProperty.Click += new System.EventHandler(this.ButtonHideProperty_Click);
+            // 
             // ButtonEnabled
             // 
             this.ButtonEnabled.Image = ((System.Drawing.Image)(resources.GetObject("ButtonEnabled.Image")));
@@ -256,19 +276,17 @@
             this.PropertyGrid.Size = new System.Drawing.Size(530, 127);
             this.PropertyGrid.TabIndex = 0;
             // 
-            // toolStripSeparator2
+            // ToolStripMenuItemSystemMenu
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.ToolStripMenuItemSystemMenu.Name = "ToolStripMenuItemSystemMenu";
+            this.ToolStripMenuItemSystemMenu.Size = new System.Drawing.Size(163, 22);
+            this.ToolStripMenuItemSystemMenu.Text = "System Menu";
+            this.ToolStripMenuItemSystemMenu.Click += new System.EventHandler(this.ToolStripMenuItemSystemMenu_Click);
             // 
-            // ButtonHideProperty
+            // toolStripMenuItem2
             // 
-            this.ButtonHideProperty.Image = ((System.Drawing.Image)(resources.GetObject("ButtonHideProperty.Image")));
-            this.ButtonHideProperty.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonHideProperty.Name = "ButtonHideProperty";
-            this.ButtonHideProperty.Size = new System.Drawing.Size(119, 22);
-            this.ButtonHideProperty.Text = "Hide properties";
-            this.ButtonHideProperty.Click += new System.EventHandler(this.ButtonHideProperty_Click);
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(160, 6);
             // 
             // CacheManagerView
             // 
@@ -317,5 +335,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         public System.Windows.Forms.SplitContainer SplitContainerMain;
         public System.Windows.Forms.ToolStripButton ButtonHideProperty;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemSystemMenu;
     }
 }

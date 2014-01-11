@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Easygoing.FiddlerCache.Model
 {
@@ -20,8 +21,26 @@ namespace Easygoing.FiddlerCache.Model
         public Dictionary<string, string> ResponseHeaders { get;  set; }
         public int ImageIndex { get; set; }
 
+        private CacheHost cacheHost;
+        public CacheHost CacheHost { get { return cacheHost; } set { this.cacheHost = value; } }
+        private CheckState checkState;
+        public override CheckState CheckState 
+        {
+            get { return checkState; }
+            set 
+            {
+                this.checkState = value;
+                if (cacheHost != null && !cacheHost.LockState)
+                {
+                    cacheHost.CheckStateUpdate();
+                }
+            }
+        }
+
         public CacheItem()
         {
+            cacheHost = null;
+            checkState = System.Windows.Forms.CheckState.Checked;
             Url = string.Empty;
             Local = string.Empty;
             ResponseHeaders = new Dictionary<string, string>();
@@ -34,6 +53,7 @@ namespace Easygoing.FiddlerCache.Model
             try
             {
                 Uri uri = new Uri(session.fullUrl);
+                this.CheckState = System.Windows.Forms.CheckState.Checked;
                 PathAndQuery = uri.PathAndQuery;
                 ImageIndex = session.ViewItem.ImageIndex;
                 Local = FileUtil.ReserveUriLocal(uri, dir, session.oResponse.MIMEType);

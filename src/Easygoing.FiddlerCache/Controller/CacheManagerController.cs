@@ -3,9 +3,11 @@ using Easygoing.FiddlerCache.Model;
 using Easygoing.FiddlerCache.Service;
 using Easygoing.FiddlerCache.View;
 using Fiddler;
+using Peter;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,8 @@ namespace Easygoing.FiddlerCache.Controller
         public CacheConfig CacheConfig { get; set; }
         protected CacheService cacheService = null;
         protected SessionListView sessionListView = null;
+        protected ShellContextMenu shellMenu = null;
+
         public ImageList ImageList { get; set; }
 
         public CacheManagerController()
@@ -27,6 +31,7 @@ namespace Easygoing.FiddlerCache.Controller
            View = new CacheManagerView(this);
            OnAddCacheViewAction(cacheService.Load());
            CacheConfig = cacheService.CacheConfig;
+           shellMenu = new ShellContextMenu();
            InitializeUI();
         }
 
@@ -154,7 +159,7 @@ namespace Easygoing.FiddlerCache.Controller
             Fiddler.FiddlerApplication.UI.mnuSessionContext.MenuItems.Add(menuAddCache);
 
             MenuItem menuAddCache2 = new MenuItem("Add Cache Without Query");
-            menuAddCache2.Click += OnMenuAddCache2_Click;
+            menuAddCache2.Click += OnMenuAddCacheWithoutQuery_Click;
             Fiddler.FiddlerApplication.UI.mnuTools.MenuItems.Add(menuAddCache2);
             Fiddler.FiddlerApplication.UI.mnuSessionContext.MenuItems.Add(menuAddCache2);
         } 
@@ -185,7 +190,7 @@ namespace Easygoing.FiddlerCache.Controller
             OnAddSessions2CacheAction(true);
         }
 
-        protected void OnMenuAddCache2_Click(object sender, EventArgs e)
+        protected void OnMenuAddCacheWithoutQuery_Click(object sender, EventArgs e)
         {
             OnAddSessions2CacheAction(false);
         }
@@ -391,6 +396,30 @@ namespace Easygoing.FiddlerCache.Controller
         }
 
         #endregion
-        
+
+
+        public void ShowSystemMenu(Point p)
+        {
+            List<FileInfo> files = new List<FileInfo>();
+            foreach (var item in this.View.TreeListViewCache.SelectedObjects)
+            {
+                CacheItem it = item as CacheItem;
+                if (it != null)
+                {
+                    files.Add(new FileInfo(it.Local));
+                }
+            }
+            if (files.Count > 0) 
+            {
+                try
+                {
+                    shellMenu.ShowContextMenu(files.ToArray(), this.View.PointToScreen(p));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+            }
+        }
     }
 }

@@ -61,6 +61,13 @@ namespace Easygoing.FiddlerCache.View
             renderer.LinePen = new Pen(Color.Firebrick, 0.5f);
             renderer.LinePen.DashStyle = DashStyle.Dot;
 
+            TreeListViewCache.CheckStateGetter = delegate(object x)
+            {
+                CheckState s = CheckState.Checked;
+                return s;
+        
+            };
+
             TreeListViewCache.CanExpandGetter = delegate(object x)
             {
                 return x is CacheHost;
@@ -78,19 +85,6 @@ namespace Easygoing.FiddlerCache.View
                     return new CacheItem[0];
                 }
             };
-
-            //olvColumnHost.AspectGetter = delegate(object x)
-            //{
-            //    CacheNode item = x as CacheNode;
-            //    if (item != null)
-            //    {
-            //        return item.Host;
-            //    }
-            //    else
-            //    {
-            //        return string.Empty;
-            //    }
-            //};
 
             olvColumnUrl.ImageGetter = delegate(object x)
             {
@@ -225,6 +219,17 @@ namespace Easygoing.FiddlerCache.View
         private void ButtonHideProperty_Click(object sender, EventArgs e)
         {
             cacheManagerController.OnUIHidePropertiesAction();
+        }
+
+        private void ToolStripMenuItemSystemMenu_Click(object sender, EventArgs e)
+        {
+            cacheManagerController.ShowSystemMenu(System.Windows.Forms.Cursor.Position);
+        }
+
+        private void TreeListViewCache_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            e.Item.Checked =
+                !e.Item.Checked;
         }
     }
 }
