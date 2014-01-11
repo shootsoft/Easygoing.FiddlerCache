@@ -42,6 +42,8 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.ToolStripMenuItemSystemMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -53,8 +55,6 @@
             this.ImageListIcon = new System.Windows.Forms.ImageList(this.components);
             this.SplitContainerMain = new System.Windows.Forms.SplitContainer();
             this.PropertyGrid = new System.Windows.Forms.PropertyGrid();
-            this.ToolStripMenuItemSystemMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.TreeListViewCache)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -82,12 +82,12 @@
             this.TreeListViewCache.Name = "TreeListViewCache";
             this.TreeListViewCache.OwnerDraw = true;
             this.TreeListViewCache.ShowGroups = false;
+            this.TreeListViewCache.ShowImagesOnSubItems = true;
             this.TreeListViewCache.Size = new System.Drawing.Size(530, 205);
             this.TreeListViewCache.TabIndex = 3;
             this.TreeListViewCache.UseCompatibleStateImageBehavior = false;
             this.TreeListViewCache.View = System.Windows.Forms.View.Details;
             this.TreeListViewCache.VirtualMode = true;
-            this.TreeListViewCache.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.TreeListViewCache_ItemChecked);
             this.TreeListViewCache.SelectedIndexChanged += new System.EventHandler(this.TreeListViewCache_SelectedIndexChanged);
             // 
             // olvColumnUrl
@@ -166,6 +166,18 @@
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(160, 6);
+            // 
+            // ToolStripMenuItemSystemMenu
+            // 
+            this.ToolStripMenuItemSystemMenu.Name = "ToolStripMenuItemSystemMenu";
+            this.ToolStripMenuItemSystemMenu.Size = new System.Drawing.Size(163, 22);
+            this.ToolStripMenuItemSystemMenu.Text = "System Menu";
+            this.ToolStripMenuItemSystemMenu.Click += new System.EventHandler(this.ToolStripMenuItemSystemMenu_Click);
             // 
             // toolStrip1
             // 
@@ -273,20 +285,9 @@
             this.PropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PropertyGrid.Location = new System.Drawing.Point(0, 0);
             this.PropertyGrid.Name = "PropertyGrid";
+            this.PropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.PropertyGrid.Size = new System.Drawing.Size(530, 127);
             this.PropertyGrid.TabIndex = 0;
-            // 
-            // ToolStripMenuItemSystemMenu
-            // 
-            this.ToolStripMenuItemSystemMenu.Name = "ToolStripMenuItemSystemMenu";
-            this.ToolStripMenuItemSystemMenu.Size = new System.Drawing.Size(163, 22);
-            this.ToolStripMenuItemSystemMenu.Text = "System Menu";
-            this.ToolStripMenuItemSystemMenu.Click += new System.EventHandler(this.ToolStripMenuItemSystemMenu_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(160, 6);
             // 
             // CacheManagerView
             // 

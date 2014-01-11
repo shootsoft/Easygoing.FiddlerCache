@@ -7,9 +7,9 @@ using System.Windows.Forms;
 namespace Easygoing.FiddlerCache.Model
 {
     [Serializable]
-    public class CacheNode
+    public abstract class CacheNode
     {
         public string Host { get; set; }
-        public virtual CheckState CheckState { get; set; }
+        public abstract  CheckState CheckState { get; set; }
     }
 }

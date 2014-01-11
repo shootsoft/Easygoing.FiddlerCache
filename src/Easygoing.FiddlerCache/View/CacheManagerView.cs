@@ -63,9 +63,28 @@ namespace Easygoing.FiddlerCache.View
 
             TreeListViewCache.CheckStateGetter = delegate(object x)
             {
-                CheckState s = CheckState.Checked;
-                return s;
+                CacheNode node = x as CacheNode;
+                if (x != null)
+                {
+                    return node.CheckState;
+                }
+                else
+                {
+                    return CheckState.Checked;
+                }
         
+            };
+
+            TreeListViewCache.CheckStatePutter = delegate(object x, CheckState newValue)
+            {
+                CacheNode node = x as CacheNode;
+                if (x != null)
+                {
+                    node.CheckState = newValue;
+                }
+                TreeListViewCache.Refresh();
+                return newValue;
+
             };
 
             TreeListViewCache.CanExpandGetter = delegate(object x)
@@ -223,13 +242,9 @@ namespace Easygoing.FiddlerCache.View
 
         private void ToolStripMenuItemSystemMenu_Click(object sender, EventArgs e)
         {
-            cacheManagerController.ShowSystemMenu(System.Windows.Forms.Cursor.Position);
+            cacheManagerController.OnShowSystemMenu(System.Windows.Forms.Cursor.Position);
         }
 
-        private void TreeListViewCache_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            e.Item.Checked =
-                !e.Item.Checked;
-        }
+
     }
 }

@@ -37,23 +37,31 @@ namespace Easygoing.FiddlerCache.Service
 
         public IEnumerable<CacheItem> Load()
         {
+            CacheItem[] list = new CacheItem[0]; 
+
             if (File.Exists(CacheConfig.DBFile))
             {
-                using (FileStream fs = new FileStream(CacheConfig.DBFile, FileMode.Open))
+                try
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Binder = new InsideCOMBinder();
-            
-                    object obj = formatter.Deserialize(fs);
-                    cache = obj as Dictionary<string, CacheItem>;
-                    if (cache == null) cache = new Dictionary<string, CacheItem>();
-                    return cache.Values;
+                    using (FileStream fs = new FileStream(CacheConfig.DBFile, FileMode.Open))
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        formatter.Binder = new InsideCOMBinder();
+
+                        object obj = formatter.Deserialize(fs);
+                        cache = obj as Dictionary<string, CacheItem>;
+                        if (cache == null) cache = new Dictionary<string, CacheItem>();
+                        list = cache.Values.ToArray();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
                 }
             }
-            else 
-            { 
-                return new CacheItem[0];
-            }
+
+            return list;
+
             //List<CacheItem> list = new List<CacheItem>();
             //int count = (int)db.Count();
             //for (int i = 0; i < count; i++)

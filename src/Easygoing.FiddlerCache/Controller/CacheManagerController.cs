@@ -240,10 +240,12 @@ namespace Easygoing.FiddlerCache.Controller
                 if (!View.CacheIndex.ContainsKey(item.Host))
                 {
                     CacheHost host = new CacheHost() { Host = item.Host };
+                    item.CacheHost = host;
                     View.CacheIndex[item.Host] = host;
                     View.TreeListViewCache.AddObject(host);
                 }
                 View.CacheIndex[item.Host].Items[item.Url] = item;
+                View.CacheIndex[item.Host].CheckStateUpdate();
             }
             View.TreeListViewCache.RebuildAll(true);
 
@@ -395,10 +397,11 @@ namespace Easygoing.FiddlerCache.Controller
             }
         }
 
-        #endregion
-
-
-        public void ShowSystemMenu(Point p)
+        /// <summary>
+        /// Popup system shell context menu
+        /// </summary>
+        /// <param name="p"></param>
+        public void OnShowSystemMenu(Point p)
         {
             List<FileInfo> files = new List<FileInfo>();
             foreach (var item in this.View.TreeListViewCache.SelectedObjects)
@@ -409,7 +412,7 @@ namespace Easygoing.FiddlerCache.Controller
                     files.Add(new FileInfo(it.Local));
                 }
             }
-            if (files.Count > 0) 
+            if (files.Count > 0)
             {
                 try
                 {
@@ -421,5 +424,8 @@ namespace Easygoing.FiddlerCache.Controller
                 }
             }
         }
+        #endregion
+
+        
     }
 }

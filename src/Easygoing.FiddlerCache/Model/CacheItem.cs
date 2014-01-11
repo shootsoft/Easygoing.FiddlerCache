@@ -2,11 +2,16 @@
 using Fiddler;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Design;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.Design;
+using Wexman.Design;
 
 namespace Easygoing.FiddlerCache.Model
 {
@@ -15,14 +20,35 @@ namespace Easygoing.FiddlerCache.Model
     {
         public string Url { get;  set; }
         public string PathAndQuery { get; set; }
+        [System.ComponentModel.Editor(
+            typeof(System.Windows.Forms.Design.FileNameEditor),
+            typeof(System.Drawing.Design.UITypeEditor))]
         public string Local { get;  set; }
         public DateTime Creation { get; set; }
         public long Length { get; set; }
-        public Dictionary<string, string> ResponseHeaders { get;  set; }
+
+        //[System.ComponentModel.Editor(typeof(GenericDictionaryEditor<string, string>), typeof(UITypeEditor))]
+        //[GenericDictionaryEditor(ValueEditorType = typeof(FileNameEditor), Title = "Where are your files located?", KeyDisplayName = "Name", ValueDisplayName = "Value")]
+
+        public List<CacheHeader> ResponseHeaders { get; set; }
+        //public Dictionary<string, string> ResponseHeaders { get;  set; }
+
         public int ImageIndex { get; set; }
 
         private CacheHost cacheHost;
-        public CacheHost CacheHost { get { return cacheHost; } set { this.cacheHost = value; } }
+        public CacheHost CacheHost
+        {
+            get
+            {
+                return cacheHost;
+            }
+            set
+            {
+                this.cacheHost = value;
+                //this.cacheHost.Items.Add(this.Url, this);
+                //this.cacheHost.RefreshCheckState();
+            }
+        }
         private CheckState checkState;
         public override CheckState CheckState 
         {
@@ -43,7 +69,9 @@ namespace Easygoing.FiddlerCache.Model
             checkState = System.Windows.Forms.CheckState.Checked;
             Url = string.Empty;
             Local = string.Empty;
-            ResponseHeaders = new Dictionary<string, string>();
+            ResponseHeaders = new List<CacheHeader>();
+            //new NameValueCollection();
+            //new Dictionary<string, string>();
             Creation = DateTime.Now;
         }
 
@@ -57,14 +85,16 @@ namespace Easygoing.FiddlerCache.Model
                 PathAndQuery = uri.PathAndQuery;
                 ImageIndex = session.ViewItem.ImageIndex;
                 Local = FileUtil.ReserveUriLocal(uri, dir, session.oResponse.MIMEType);
-                ResponseHeaders = new Dictionary<string, string>();
+                ResponseHeaders = new List<CacheHeader>();
+                    // new NameValueCollection();// new Dictionary<string, string>();
                 Creation = DateTime.Now;
                 Host = uri.Host;
                 session.utilDecodeResponse();
                 Length = session.responseBodyBytes.LongLength;
                 foreach (Fiddler.HTTPHeaderItem item in session.oResponse.headers)
                 {
-                    ResponseHeaders[item.Name] = item.Value;
+                    ResponseHeaders.Add(new CacheHeader() { Name = item.Name, Value = item.Value });
+                    //ResponseHeaders[item.Name] = item.Value;
                 }
 
                 FileInfo fi = new FileInfo(Local);
@@ -88,7 +118,7 @@ namespace Easygoing.FiddlerCache.Model
             {
                 if (oSession.oResponse.headers != null)
                 {
-                    oSession.oResponse.headers[item.Key] = item.Value;
+                    oSession.oResponse.headers[item.Name] = item.Value;
                 }
                 
             }

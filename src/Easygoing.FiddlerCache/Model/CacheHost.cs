@@ -17,8 +17,8 @@ namespace Easygoing.FiddlerCache.Model
             get { return checkState; }
             set 
             {
-                LockState = true;
                 this.checkState = value;
+                LockState = true;
                 CheckStateUpdate();
                 LockState = false;
             }
@@ -67,5 +67,6 @@ namespace Easygoing.FiddlerCache.Model
             }
                     
         }
+
     }
 }

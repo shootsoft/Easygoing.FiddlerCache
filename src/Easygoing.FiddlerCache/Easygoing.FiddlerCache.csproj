@@ -33,6 +33,9 @@
     <Reference Include="Fiddler">
       <HintPath>..\packages\Fiddler\Fiddler.exe</HintPath>
     </Reference>
+    <Reference Include="GenericDictionaryEditor">
+      <HintPath>..\packages\GenDictEdit.1.1.0\lib\net20\GenericDictionaryEditor.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -41,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -53,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Controller\CacheManagerController.cs" />
     <Compile Include="Model\CacheConfig.cs" />
+    <Compile Include="Model\CacheHeader.cs" />
     <Compile Include="Model\CacheHost.cs" />
     <Compile Include="Model\CacheItem.cs" />
     <Compile Include="Model\CacheNode.cs" />
