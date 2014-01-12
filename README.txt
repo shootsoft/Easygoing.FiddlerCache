@@ -10,4 +10,4 @@ A cache management plugin
 - Smart responser (ignore query path)
 - Enable/disable a single cache or the plugin
 
-![Easygoing.FiddlerCache](https://raw.github.com/shootsoft/Easygoing.FiddlerCache/master/doc/img/snapshot.png)
+![Easygoing.FiddlerCache](https://raw.github.com/shootsoft/Easygoing.FiddlerCache/master/doc/img/snapshot.png "FiddlerCache snapshot")
