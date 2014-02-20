@@ -1509,7 +1509,7 @@ namespace Peter
                 m_hookType,
                 m_filterFunc,
                 IntPtr.Zero,
-                (int)AppDomain.GetCurrentThreadId());
+                (int)System.Threading.Thread.CurrentThread.ManagedThreadId);
         }
         // ************************************************************************
 
